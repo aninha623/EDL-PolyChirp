@@ -1,0 +1,15 @@
+include = ["../build/imports/ariel-os/ariel-os-cargo.toml"]
+
+[unstable]
+config-include = true
+
+# use a better opti level : important for microflow
+[profile.release]
+opt-level = 3
+
+[env]
+IREE_PATH = { value = "../iree", relative = true }
+# eerie-sys cmake build: GNU Make 4.3 chokes on cargo's fifo jobserver, use Ninja.
+CMAKE_GENERATOR = "Ninja"
+# newlib-nano sysroot for the cross-compiled IREE runtime (armv8-m hard-float).
+CLANG_CONFIG_PATH = { value = "clang-newlib-armv8m.cfg", relative = true }

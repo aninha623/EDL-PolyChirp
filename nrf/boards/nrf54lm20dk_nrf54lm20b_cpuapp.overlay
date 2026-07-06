@@ -1,0 +1,13 @@
+&axon {
+    status = "okay";
+};
+
+/* PPK2 trace pins (ENERGY_TRACE builds only; unreferenced otherwise).
+ * P1.12/P1.13 are free on the GPIO_P1 header — same wiring as nrf-blinky
+ * and the Rust bench: D0 = one inference, D1 = the whole sweep. */
+/ {
+    zephyr,user {
+        infer-trace-gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+        sweep-trace-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+    };
+};

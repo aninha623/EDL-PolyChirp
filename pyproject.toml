@@ -1,0 +1,45 @@
+[project]
+name = "polychirp"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "tensorflow[and-cuda]>=2.10 ; sys_platform == 'linux'",
+  "tensorflow>=2.10 ; sys_platform != 'linux'",
+  "numpy",
+  "librosa",
+  "soundfile",
+  "ipykernel",
+  "jupyter",
+  "tensorflow-io[tensorflow]>=0.37.1",
+  "keras>=3.13.2",
+  "matplotlib>=3.10.8",
+  "tqdm>=4.67.3",
+  "requests>=2.32",
+  "birdnetlib>=0.9",
+  "python-dotenv>=1.0",
+  "pydantic>=2.0",
+  "scikit-learn>=1.4",
+  "pandas>=2.0",
+  "pyrootutils>=1.0",
+  "types-tensorflow>=2.18.0.20260402",
+  "resampy>=0.4.3",
+  "datasets>=3.0",
+  "xenocanto3 @ git+https://github.com/NathanDuboisset/xenocanto3.git@master",
+  "folium>=0.16",
+  "ebird-api>=4.0.0",
+  "audiomentations>=0.43.1",
+  "livelossplot>=0.6.1",
+  "iree-base-compiler==3.8.0",
+  "pyserial>=3.5",
+  "iree-tools-tflite==20251010.1410",
+]
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["building"]
+
+[tool.hatch.metadata]
+allow-direct-references = true

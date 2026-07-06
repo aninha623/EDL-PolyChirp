@@ -1,0 +1,54 @@
+[package]
+name = "tiny-chirp-microflow"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ariel-os = { path = "build/imports/ariel-os/src/ariel-os", features = ["time"] }
+ariel-os-boards = { path = "build/imports/ariel-os/src/ariel-os-boards" }
+microflow = { default-features = false, git = "https://github.com/NathanDuboisset/microflow-rs.git", branch = "multichirp", features = ["ariel-os"] }
+microfft = { version = "0.6", default-features = false, features = ["size-1024", "size-512"] }
+libm = { version = "0.2", default-features = false }
+nalgebra = { version = "0.32", default-features = false }
+eerie = { path = "../eerie", default-features = false, features = ["runtime"], optional = true }
+portable-atomic = { version = "1", default-features = false, optional = true }
+
+[build-dependencies]
+cc = "1.2"
+
+[features]
+default = []
+
+runtime_iree = ["dep:eerie", "dep:portable-atomic"]  # IREE runtime via eerie + EmitC model
+
+# Input pipeline (one per model picks one of these)
+input_time = []
+input_mel_default = []     # 80 bins, 80-8000 Hz,   N=1024, H=256, F=184 — mel_cnn, mel_cnn_new
+input_mel_higher = []      # 40 bins, 2500-8000 Hz, N=1024, H=256, F=184 — mel_higher
+input_mel_ultralight = []  # 40 bins, 2500-8000 Hz, N=512,  H=480, F=99  — mel_ultralight
+
+# Microflow runtime knob: stream kernel activations through a ring buffer
+# instead of materializing the full tensor. Trades arena RAM for a large
+# slowdown — flip on only when normal mode runs out of arena.
+kernel_streaming = []
+
+# Bracket each inference with a GPIO pulse (D0, plus D1 around the sweep) for
+# external PPK2 energy+latency capture; strips all timing/logging so only the
+# inference sits inside the pulse. laze: -s energy-trace. See src/trace.rs.
+energy_trace = []
+
+# Strip the model + inference path entirely; main loop just times
+# spectrogram::compute over the configured mel input. Pair with one of
+# the input_mel_* features.
+bench_spectro_only = ["ariel-os/bench"]
+
+# Re-enable the original per-frame mel pipeline: runtime Hann window and
+# runtime triangular mel filterbank (cosf / log10f / powf in the hot
+# loop). Off by default — the fast path uses tables emitted by build.rs.
+# Pair with bench_spectro_only to compare per-step timings.
+tiny_chirp_preprocess = []
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+  'cfg(context, values(any()))',
+] }

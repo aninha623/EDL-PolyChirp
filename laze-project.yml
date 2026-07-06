@@ -1,0 +1,210 @@
+imports:
+  - git:
+      url: https://github.com/kaspar030/ariel-os
+      branch: add-nrf54lm20
+    dldir: ariel-os
+
+# Pick exactly one model, one task, and one size, e.g.:
+#   laze build -b nrf5340dk-app -s model-sincnet -s task-s3-49-2-r50 -s size-x1 run
+#
+# Each model-* selector sets the MODEL env var (consumed by the macro path) and
+# the matching input pipeline feature (mel-default / mel-higher / time).
+modules:
+  # --- Model ---
+  - name: model-sincnet
+    conflicts: [model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="sincnet"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-sincnet-large
+    conflicts: [model-sincnet, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="sincnet_large"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-sincnet-new
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="sincnet_new"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-sincnet-norm
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="sincnet_norm"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-mel-cnn
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mel_cnn"']
+        FEATURES: [tiny-chirp-microflow/input_mel_default]
+  - name: model-mel-cnn-new
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mel_cnn_new"']
+        FEATURES: [tiny-chirp-microflow/input_mel_default]
+  - name: model-mel-higher
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mel_higher"']
+        FEATURES: [tiny-chirp-microflow/input_mel_higher]
+  - name: model-mel-ultralight
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mel_ultralight"']
+        FEATURES: [tiny-chirp-microflow/input_mel_ultralight]
+  - name: model-mel-higher-lite
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-ultralight, model-cnn1d, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mel_higher_lite"']
+        FEATURES: [tiny-chirp-microflow/input_mel_higher]
+  - name: model-cnn1d
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-transformer]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="cnn1d"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-transformer
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-wrennet]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="transformer"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-wrennet
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer, model-leaf-pcen]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="wrennet"']
+        FEATURES: [tiny-chirp-microflow/input_mel_higher]
+  - name: model-leaf-pcen
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer, model-wrennet]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="leaf_pcen"']
+        FEATURES: [tiny-chirp-microflow/input_time]
+  - name: model-ds-cnn
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer, model-wrennet, model-leaf-pcen, model-mobilenetv2, model-mcunet-in0]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="ds_cnn"']
+        FEATURES: [tiny-chirp-microflow/input_mel_default]
+  - name: model-mobilenetv2
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer, model-wrennet, model-leaf-pcen, model-ds-cnn, model-mcunet-in0]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mobilenetv2"']
+        FEATURES: [tiny-chirp-microflow/input_mel_default]
+  - name: model-mcunet-in0
+    conflicts: [model-sincnet, model-sincnet-large, model-sincnet-new, model-sincnet-norm, model-mel-cnn, model-mel-cnn-new, model-mel-higher, model-mel-higher-lite, model-mel-ultralight, model-cnn1d, model-transformer, model-wrennet, model-leaf-pcen, model-ds-cnn, model-mobilenetv2]
+    env:
+      global:
+        CARGO_ENV: ['MODEL="mcunet_in0"']
+        FEATURES: [tiny-chirp-microflow/input_mel_default]
+
+  # --- Spectrogram-only benchmarks (no model). Pair with a task selector for the
+  # audio sample; MODEL/MULT are not consumed in this path. ---
+  - name: bench-spec-default
+    conflicts: [bench-spec-higher, bench-spec-ultralight]
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/bench_spectro_only, tiny-chirp-microflow/input_mel_default]
+  - name: bench-spec-higher
+    conflicts: [bench-spec-default, bench-spec-ultralight]
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/bench_spectro_only, tiny-chirp-microflow/input_mel_higher]
+  - name: bench-spec-ultralight
+    conflicts: [bench-spec-default, bench-spec-higher]
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/bench_spectro_only, tiny-chirp-microflow/input_mel_ultralight]
+
+  # Swap the fast precomputed-table mel path for the original tiny-chirp
+  # runtime computation (cosf / log10f / powf in the inner loop). Pair with a
+  # bench-spec-* selector to compare per-step timings.
+  - name: preprocess-tiny-chirp
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/tiny_chirp_preprocess]
+
+  # --- Task / training collection (TASK env var; class names come from the
+  # generated src/audio_samples/<task>/sample.rs) ---
+  - name: task-s1-49-2-r50
+    conflicts: [task-s2-49-2-r50, task-s3-49-2-r50, bench]
+    env:
+      global:
+        CARGO_ENV: ['TASK="task_s1_49_2_r50"']
+  - name: task-s2-49-2-r50
+    conflicts: [task-s1-49-2-r50, task-s3-49-2-r50, bench]
+    env:
+      global:
+        CARGO_ENV: ['TASK="task_s2_49_2_r50"']
+  - name: task-s3-49-2-r50
+    conflicts: [task-s1-49-2-r50, task-s2-49-2-r50, bench]
+    env:
+      global:
+        CARGO_ENV: ['TASK="task_s3_49_2_r50"']
+  - name: bench
+    conflicts: [task-s1-49-2-r50, task-s2-49-2-r50, task-s3-49-2-r50]
+    env:
+      global:
+        CARGO_ENV: ['TASK="bench"']
+
+  # --- Runtime knobs (optional; combined freely with the above selectors) ---
+  - name: streaming
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/kernel_streaming]
+
+  - name: runtime-iree
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/runtime_iree]
+        # iree allocates working buffers from the heap, so override the microflow
+        # stack down to leave the rest of RAM as heap.
+        CONFIG_EXECUTOR_STACKSIZE: "98304"
+
+  # PPK2 energy capture: GPIO-bracket each inference (see src/trace.rs).
+  - name: energy-trace
+    env:
+      global:
+        FEATURES: [tiny-chirp-microflow/energy_trace]
+
+  # --- Size multiplier (MULT env var consumed by env!("MULT") at compile time) ---
+  - name: size-x1
+    conflicts: [size-x2, size-x3, size-x4]
+    env:
+      global:
+        CARGO_ENV: ['MULT="x1"']
+  - name: size-x2
+    conflicts: [size-x1, size-x3, size-x4]
+    env:
+      global:
+        CARGO_ENV: ['MULT="x2"']
+  - name: size-x3
+    conflicts: [size-x1, size-x2, size-x4]
+    env:
+      global:
+        CARGO_ENV: ['MULT="x3"']
+  - name: size-x4
+    conflicts: [size-x1, size-x2, size-x3]
+    env:
+      global:
+        CARGO_ENV: ['MULT="x4"']
+
+apps:
+  - name: tiny-chirp-microflow
+    selects:
+      - alloc
+    env:
+      global:
+        # microflow lives on the stack (near-zero heap); iree overrides this down.
+        executor_stacksize_required:
+          - "500000"
