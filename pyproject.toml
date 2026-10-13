@@ -10,7 +10,7 @@ dependencies = [
   "soundfile",
   "ipykernel",
   "jupyter",
-  "tensorflow-io[tensorflow]>=0.37.1",
+  "tensorflow-io[tensorflow]>=0.37.1 ; sys_platform == 'linux'",
   "keras>=3.13.2",
   "matplotlib>=3.10.8",
   "tqdm>=4.67.3",
@@ -43,3 +43,8 @@ packages = ["building"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.uv]
+required-environments = [
+  "sys_platform == 'win32' and platform_machine == 'AMD64'"
+]
