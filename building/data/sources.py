@@ -164,7 +164,17 @@ class EBirdSource(Source):
                 params["initialCursorMark"] = cursor
             r = self._session.get(ML_SEARCH_URL, params=params, timeout=20)
             r.raise_for_status()
-            data = r.json().get("results", {})
+            if not r.text.strip():
+                print(f"[Warning] Empty response received from eBird for {scientific_name}. Stopping listing fetch for this species.")
+                break
+                
+            try:
+                response_json = r.json()
+            except requests.exceptions.JSONDecodeError:
+                print(f"[Warning] Invalid JSON received from eBird for {scientific_name} (Status: {r.status_code}). Response preview: {r.text[:100]!r}")
+                break
+            
+            data = response_json.get("results", {})
             items = data.get("content") or []
             if not items:
                 break
