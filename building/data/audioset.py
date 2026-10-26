@@ -27,66 +27,12 @@ FOCUS_CLASSES: list[str] = [
     "Male speech, man speaking",
     "Female speech, woman speaking",
     "Conversation",
-    "Narration, monologue",
-    "Children playing",
-    "Crowd",
-    "Laughter",
-    "Applause",
-    "Cheering",
-    "Whistling",
-    "Singing",
-    "Walk, footsteps",
-    "Door",
-    "Knock",
-    "Typing",
-    "Computer keyboard",
-    "Aircraft",
-    "Helicopter",
-    "Car",
-    "Motorcycle",
-    "Truck",
-    "Bus",
-    "Train",
-    "Traffic noise, roadway noise",
-    "Engine",
-    "Light engine (high frequency)",
-    "Chainsaw",
-    "Lawn mower",
-    "Power tool",
-    "Drill",
-    "Hammer",
-    "Sawing",
-    "Jackhammer",
-    "Church bell",
-    "Bell",
-    "Alarm",
-    "Siren",
-    "Dog",
-    "Cat",
-    "Bee, wasp, etc.",
-    "Cricket",
-    "Insect",
-    "Mosquito",
-    "Fly, housefly",
-    "Frog",
-    "Croak",
     "Rain",
-    "Rain on surface",
-    "Raindrop",
-    "Thunder",
-    "Thunderstorm",
     "Wind",
-    "Wind noise (microphone)",
-    "Howl",
-    "Rustling leaves",
     "Stream",
-    "Waterfall",
-    "Ocean",
-    "Fire",
     "Outside, rural or natural",
     "Outside, urban or manmade",
-    "Inside, small room",
-    "Inside, large room or hall",
+    "Traffic noise, roadway noise",
 ]
 
 
@@ -103,8 +49,8 @@ class AudioSetConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     split: Literal["unbalanced_train", "balanced_train", "eval"] = "unbalanced_train"
-    clips_per_class: int = 250
-    max_total_clips: int = 5000
+    clips_per_class: int = 100
+    max_total_clips: int = 1000
     target_sample_rate: int = TARGET_SAMPLE_RATE
     target_clip_duration: float = CLIP_DURATION
     processed_dir: Path = RAW_DATASET_DIR / "audioset"
@@ -404,8 +350,9 @@ def stream_download_audioset(cfg: AudioSetConfig) -> dict[str, int]:
     focus_mids = load_mid_to_focus()
     if not focus_mids:
         raise RuntimeError("No focus classes matched the AudioSet ontology.")
-
+    
     # Bucket candidates by focus class (one pass through the big CSV).
+    MAX_CANDIDATES_PER_CLASS = 300
     by_class: dict[str, list[tuple[str, float, float]]] = {
         slugify(c): [] for c in FOCUS_CLASSES
     }
